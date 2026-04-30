@@ -267,16 +267,16 @@ CREATE  PROCEDURE `add_product_to_cart` (IN `id_product` BIGINT UNSIGNED, IN `pr
     SELECT SUM(diff) INTO @psq FROM stock_events WHERE product_id=id_product;
     
 	-- Sprawdzenie, czy dany klient ma już przypisany koszyk 
-    SELECT IFNULL((SELECT cart_id FROM cart WHERE customer_id=id_customer), NULL) AS cart_id INTO id_cart;
+    SELECT cart_id INTO id_cart FROM cart WHERE customer_id=id_customer AND active=1 ORDER BY updated_at DESC LIMIT 1;
 
     -- Jeśli nie, tworzymy nowy koszyk i przypisujemy jego ID do id_cart.
     IF id_cart IS NULL THEN
         INSERT INTO cart(customer_id) VALUES(id_customer);
-        SELECT cart_id INTO id_cart FROM cart WHERE customer_id=id_customer;
+        SET id_cart = LAST_INSERT_ID();
     END IF;
 
     -- Sprawdzenie, czy produkt, który chcemy dodać do koszyka znajduje się już w nim.
-    SELECT IFNULL((SELECT item_id FROM cart_item WHERE cart_id=id_cart AND product_id=id_product), NULL) AS cart_item INTO id_item;
+    SELECT item_id INTO id_item FROM cart_item WHERE cart_id=id_cart AND product_id=id_product LIMIT 1;
 
     -- Jeśli tak, aktualizujemy tylko ilość danego produktu.
     IF id_item IS NOT NULL THEN
