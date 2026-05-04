@@ -41,6 +41,8 @@
 - v_product_details: extended product info (attributes, categories, vendor)
 - v_role_IDs: helper view mapping roles
 - v_user_IDs: helper view mapping users
+- v_user_roles: helper view mapping roles to users
+- v_role_permissions helper view mapping permissions to roles
 
 ---
 

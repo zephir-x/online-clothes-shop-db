@@ -2472,6 +2472,32 @@ CREATE TABLE IF NOT EXISTS `v_user_IDs` (
 -- --------------------------------------------------------
 
 --
+-- Zastąpiona struktura widoku `v_user_roles`
+-- (See below for the actual view)
+--
+DROP VIEW IF EXISTS `v_user_roles`;
+CREATE TABLE IF NOT EXISTS `v_user_roles` (
+`users_id` bigint(20) unsigned
+,`first_name` varchar(100)
+,`last_name` varchar(100)
+,`role_name` varchar(100)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Zastąpiona struktura widoku `v_role_permissions`
+-- (See below for the actual view)
+--
+DROP VIEW IF EXISTS `v_role_permissions`;
+CREATE TABLE IF NOT EXISTS `v_role_permissions` (
+`role_name` varchar(100)
+,`permission_name` varchar(100)
+);
+
+-- --------------------------------------------------------
+
+--
 -- Struktura widoku `v_categories_tree`
 --
 DROP TABLE IF EXISTS `v_categories_tree`;
@@ -2548,6 +2574,26 @@ DROP TABLE IF EXISTS `v_user_IDs`;
 
 DROP VIEW IF EXISTS `v_user_IDs`;
 CREATE OR REPLACE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `v_user_IDs`  AS SELECT `users`.`users_id` AS `users_id`, `users`.`first_name` AS `first_name`, `users`.`last_name` AS `last_name` FROM `users` ;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura widoku `v_user_roles`
+--
+DROP TABLE IF EXISTS `v_user_roles`;
+
+DROP VIEW IF EXISTS `v_user_roles`;
+CREATE OR REPLACE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `v_user_roles` AS SELECT `u`.`users_id` AS `users_id`, `u`.`first_name` AS `first_name`, `u`.`last_name` AS `last_name`, `r`.`label` AS `role_name` FROM ((`users` `u` join `role_user` `ru` on(`u`.`users_id` = `ru`.`user_id`)) join `roles` `r` on(`ru`.`role_id` = `r`.`role_id`));
+
+-- --------------------------------------------------------
+
+--
+-- Struktura widoku `v_role_permissions`
+--
+DROP TABLE IF EXISTS `v_role_permissions`;
+
+DROP VIEW IF EXISTS `v_role_permissions`;
+CREATE OR REPLACE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `v_role_permissions` AS SELECT `r`.`label` AS `role_name`, `p`.`ident` AS `permission_name` FROM ((`roles` `r` join `role_permission` `rp` on(`r`.`role_id` = `rp`.`role_id`)) join `permissions` `p` on(`rp`.`permission_id` = `p`.`permission_id`)) ORDER BY `r`.`label`;
 
 --
 -- Constraints for dumped tables

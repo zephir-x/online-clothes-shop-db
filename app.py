@@ -368,7 +368,7 @@ with tab_akcje:
 with tab_admin:
     st.header("Panel Administratora")
     
-    st.subheader("Użytkownicy (Pracownicy)")
+    st.subheader("Użytcripts (Pracownicy)")
     st.markdown("Wykorzystuje tabelę `users`")
     if st.button("Odśwież listę pracowników"):
         cursor.execute("SELECT * FROM users LIMIT 100")
@@ -377,6 +377,26 @@ with tab_admin:
             st.dataframe(df_users, use_container_width=True)
         else:
             st.info("Brak pracowników w bazie.")
+
+    st.subheader("Role użytkowników")
+    st.markdown("Wykorzystuje widok `v_user_roles`")
+    if st.button("Odśwież role pracowników"):
+        cursor.execute("SELECT * FROM v_user_roles")
+        df_user_roles = pd.DataFrame(cursor.fetchall())
+        if not df_user_roles.empty:
+            st.dataframe(df_user_roles, use_container_width=True)
+        else:
+            st.info("Brak przypisanych ról do użytkowników.")
+
+    st.subheader("Uprawnienia ról")
+    st.markdown("Wykorzystuje widok `v_role_permissions`")
+    if st.button("Odśwież uprawnienia ról"):
+        cursor.execute("SELECT * FROM v_role_permissions")
+        df_role_perms = pd.DataFrame(cursor.fetchall())
+        if not df_role_perms.empty:
+            st.dataframe(df_role_perms, use_container_width=True)
+        else:
+            st.info("Brak przypisanych uprawnień do ról.")
 
     st.subheader("Historia logowań")
     st.markdown("Wykorzystuje tabelę `login_history`")
