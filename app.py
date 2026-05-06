@@ -368,7 +368,7 @@ with tab_akcje:
 with tab_admin:
     st.header("Panel Administratora")
     
-    st.subheader("Użytcripts (Pracownicy)")
+    st.subheader("Użytkownicy (Pracownicy)")
     st.markdown("Wykorzystuje tabelę `users`")
     if st.button("Odśwież listę pracowników"):
         cursor.execute("SELECT * FROM users LIMIT 100")
