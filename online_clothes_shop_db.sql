@@ -17,12 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
---
--- Database: `projekt_gumulak_judka`
---
-DROP DATABASE IF EXISTS `projekt_gumulak_judka`;
-CREATE DATABASE IF NOT EXISTS `projekt_gumulak_judka` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `projekt_gumulak_judka`;
+-- The script will execute inside the database created by Docker
 
 DELIMITER $$
 --
@@ -2616,7 +2611,7 @@ ALTER TABLE `billing_details`
 --
 ALTER TABLE `cart`
   ADD CONSTRAINT `billing_details_fk` FOREIGN KEY (`billing_details_id`) REFERENCES `billing_details` (`billing_details_id`),
-  ADD CONSTRAINT `customer_fk2` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`customer_id`),
+  ADD CONSTRAINT `customer_fk2` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`customer_id`) ON DELETE CASCADE,
   ADD CONSTRAINT `shipping_details_fk` FOREIGN KEY (`shipping_details_id`) REFERENCES `shipping_details` (`shipping_details_id`);
 
 --

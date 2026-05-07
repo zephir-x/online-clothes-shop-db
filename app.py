@@ -10,7 +10,7 @@ def init_connection():
         host="127.0.0.1", 
         user="root", 
         password="rootpassword", 
-        database="projekt_gumulak_judka",
+        database="ecommerce_db",
         ssl_disabled=True,
         autocommit=True
     )
