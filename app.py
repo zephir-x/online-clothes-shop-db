@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 import mysql.connector
 import pandas as pd
@@ -7,10 +8,10 @@ st.set_page_config(page_title="Panel E-commerce", layout="wide")
 @st.cache_resource
 def init_connection():
     return mysql.connector.connect(
-        host="127.0.0.1", 
-        user="root", 
-        password="rootpassword", 
-        database="ecommerce_db",
+        host=os.getenv("DB_HOST", "db"),
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_ROOT_PASSWORD"),
+        database=os.getenv("DB_NAME"),
         ssl_disabled=True,
         autocommit=True
     )

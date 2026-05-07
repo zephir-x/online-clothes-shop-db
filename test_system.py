@@ -1,11 +1,12 @@
+import os
 import pytest
 import pymysql
 
 DB_CONFIG = {
     'host': 'localhost',
-    'user': 'root',
-    'password': 'rootpassword',
-    'database': 'ecommerce_db',
+    'user': os.getenv("DB_USER"),
+    'password': os.getenv("DB_ROOT_PASSWORD"),
+    'database': os.getenv("DB_NAME"),
     'charset': 'utf8mb4',
     'collation': 'utf8mb4_general_ci',
     'cursorclass': pymysql.cursors.DictCursor
