@@ -422,3 +422,6 @@ FodyWeavers.xsd
 
 # Personal notes for workplan
 info.pdf
+
+# IDEA folder
+.idea/
