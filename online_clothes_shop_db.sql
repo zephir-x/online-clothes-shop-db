@@ -2518,7 +2518,41 @@ CREATE OR REPLACE ALGORITHM=UNDEFINED  SQL SECURITY DEFINER VIEW `v_customer_ord
 DROP TABLE IF EXISTS `v_inventory`;
 
 DROP VIEW IF EXISTS `v_inventory`;
-CREATE OR REPLACE ALGORITHM=UNDEFINED  SQL SECURITY DEFINER VIEW `v_inventory`  AS SELECT `se`.`product_id` AS `product_id`, `p`.`product_name` AS `product_name`, `p`.`summary` AS `short_description`, (select ifnull(sum(`se_inner`.`diff`),0) AS `sellable_quantity` from `stock_events` `se_inner` where `se_inner`.`event_type` in ('stock_increased','stock_decreased','order_placed','order_cancelled','returned') and `se_inner`.`product_id` = `se`.`product_id`) AS `sellable_quantity`, (select ifnull(sum(`se_inner`.`diff`),0) AS `sellable_quantity` from `stock_events` `se_inner` where `se_inner`.`event_type` in ('stock_increased','stock_decreased','order_dispatched','returned') and `se_inner`.`product_id` = `se`.`product_id`) AS `storage_quantity` FROM (`stock_events` `se` join `products` `p` on(`p`.`product_id` = `se`.`product_id`)) GROUP BY `p`.`product_id` ORDER BY `se`.`created_at` ASC ;
+CREATE OR REPLACE
+ALGORITHM=UNDEFINED
+SQL SECURITY DEFINER
+VIEW `v_inventory`  AS
+       SELECT `p`.`product_id` AS `product_id`,
+              COALESCE(`parent`.`product_name`, p.product_name) AS `product_name`,
+              `p`.`summary` AS `short_description`,
+              (
+                select ifnull(sum(`se_inner`.`diff`),0)
+                from `stock_events` `se_inner`
+                where `se_inner`.`event_type` in (
+                                                  'stock_increased',
+                                                  'stock_decreased',
+                                                  'order_placed',
+                                                  'order_cancelled',
+                                                  'returned'
+                                                 )
+                  and `se_inner`.`product_id` = `p`.`product_id`
+              ) AS `sellable_quantity`,
+              (
+                select ifnull(sum(`se_inner`.`diff`),0)
+                from `stock_events` `se_inner`
+                where `se_inner`.`event_type` in (
+                                                  'stock_increased',
+                                                  'stock_decreased',
+                                                  'order_dispatched',
+                                                  'returned'
+                                                 )
+                and `se_inner`.`product_id` = `p`.`product_id`
+              ) AS `storage_quantity`
+       FROM `products` `p`
+       LEFT JOIN `products` `parent` ON `parent`.`product_id` = `p`.`parent_id`
+       JOIN `stock_events` `se` on `se`.`product_id` = `p`.`product_id`
+       GROUP BY `p`.`product_id`
+       ORDER BY MIN(`se`.`created_at`) ASC;
 
 -- --------------------------------------------------------
 
