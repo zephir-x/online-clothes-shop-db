@@ -94,7 +94,7 @@ If you wish to modify the Python code and see changes in real-time, you can run 
 
 1.  **Start only the database container**
     ```bash
-    docker-compose up -d db
+    docker compose up -d db
     ```
 
 2.  **Update Environment Variables**  

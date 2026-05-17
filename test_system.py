@@ -1,6 +1,9 @@
 import os
 import pytest
 import pymysql
+from dotenv import load_dotenv
+
+load_dotenv()
 
 DB_CONFIG = {
     'host': 'localhost',
